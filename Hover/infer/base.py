@@ -56,8 +56,9 @@ class InferManager(object):
     def __load_model(self):
         """Create the model, load the checkpoint and define
         associated run steps to process each data batch.
-        
+
         """
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model_desc = import_module("models.hovernet.net_desc")
         model_creator = getattr(model_desc, "create_model")
 
@@ -67,7 +68,7 @@ class InferManager(object):
 
         net.load_state_dict(saved_state_dict, strict=True)
         net = torch.nn.DataParallel(net)
-        net = net.to("cuda")
+        net = net.to(device)
 
         module_lib = import_module("models.hovernet.run_desc")
         run_step = getattr(module_lib, "infer_step")

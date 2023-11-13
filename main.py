@@ -53,37 +53,41 @@ Option:
 
 from docopt import docopt
 
-if __name__ == '__main__':
-    sub_cli_dict = {'segment':segment_cli,
-                    'feature':feature_cli,
-                    'visual':visual_cli}
+if __name__ == "__main__":
+    sub_cli_dict = {
+        "segment": segment_cli,
+        "feature": feature_cli,
+        "visual": visual_cli,
+    }
     args = docopt(__doc__, help=False, options_first=True)
-    sub_cmd = args.pop('<command>')
-    sub_cmd_args = args.pop('<args>')
+    sub_cmd = args.pop("<command>")
+    sub_cmd_args = args.pop("<args>")
 
-    if args['--help'] and sub_cmd is not None:
-        if sub_cmd in sub_cli_dict: 
+    if args["--help"] and sub_cmd is not None:
+        if sub_cmd in sub_cli_dict:
             print(sub_cli_dict[sub_cmd])
         else:
             print(__doc__)
         exit()
-    if args['--help'] or sub_cmd is None:
+    if args["--help"] or sub_cmd is None:
         print(__doc__)
         exit()
-    
+
     sub_args = docopt(sub_cli_dict[sub_cmd], argv=sub_cmd_args, help=True)
-    sub_args = {k.replace('--', '') : v for k, v in sub_args.items()}
-    print(sub_args)
-    if sub_cmd=='segment':
+    sub_args = {k.replace("--", ""): v for k, v in sub_args.items()}
+    if sub_cmd == "segment":
         from F1_CellSegment import fun1
         import sys
-        sys.path.append('Hover')
+
+        sys.path.append("Hover")
         fun1(**sub_args)
-    elif sub_cmd=='feature':
+    elif sub_cmd == "feature":
         from F3_FeatureExtract import fun3
-        if sub_args['xml_path'] == 'None':
-            sub_args['xml_path'] = None
+
+        if sub_args["xml_path"] == "None":
+            sub_args["xml_path"] = None
         fun3(**sub_args)
-    elif sub_cmd=='visual':
+    elif sub_cmd == "visual":
         from F4_Visualization import fun4
+
         fun4(**sub_args)
